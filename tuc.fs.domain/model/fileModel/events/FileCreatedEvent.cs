@@ -1,6 +1,7 @@
 ﻿using System;
+using tuc.core.domain.model;
 
-namespace tuc.fs.domain
+namespace tuc.fs.domain.model.fileModel.events
 {
   internal class FileCreatedEvent : DomainEvent
   {
@@ -22,19 +23,6 @@ namespace tuc.fs.domain
       this.ContentType = contentType;
       this.Size = size;
       this.NumberOfPages = numberOfPages;
-    }
-  }
-
-  internal class FileUploadedEvent : DomainEvent
-  {
-    public string Id { get; }
-    public string Path { get; }
-
-    public FileUploadedEvent(string id, string path, DateTime uploadDate)
-      : base(uploadDate)
-    {
-      this.Path = path;
-      this.Id = id;
     }
   }
 }

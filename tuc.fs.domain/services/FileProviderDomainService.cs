@@ -1,6 +1,8 @@
 using System;
+using tuc.core.domain.services;
+using tuc.fs.domain.services.fileProvider;
 
-namespace tuc.fs.domain
+namespace tuc.fs.domain.services
 {
   public class FileProviderDomainService : DomainService
   {

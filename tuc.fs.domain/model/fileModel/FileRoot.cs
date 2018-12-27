@@ -1,20 +1,22 @@
 ﻿using System;
 using Dawn;
 using tuc.core.domain.helpers;
+using tuc.core.domain.model;
+using tuc.fs.domain.model.fileModel.events;
 
-namespace tuc.fs.domain
+namespace tuc.fs.domain.model.fileModel
 {
   public class FileRoot : AggregateRoot<string>
   {
     public string ProviderId { get; }
     public string Container { get; }
     public string Name { get; }
-    public string Path { get; private set; }
     public string ContentType { get; }
     public byte[] Bytes { get; }
     public int Size { get; }
     public int NumberOfPages { get; private set; }
     public DateTime? UploadDate { get; private set; }
+    public string Path { get; private set; }
 
     public FileRoot(string providerId, string container, string name,
       string contentType, byte[] bytes, DateTime? uploadDate = null,

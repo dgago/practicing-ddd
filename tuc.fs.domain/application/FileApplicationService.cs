@@ -1,7 +1,14 @@
 using System.Threading.Tasks;
 using Dawn;
+using tuc.core.domain.application;
+using tuc.core.domain.model;
+using tuc.fs.domain.application.commands;
+using tuc.fs.domain.data;
+using tuc.fs.domain.model.fileModel;
+using tuc.fs.domain.services;
+using tuc.fs.domain.services.fileProvider;
 
-namespace tuc.fs.domain
+namespace tuc.fs.domain.application
 {
   public class FileApplicationService : ApplicationService
   {
@@ -15,24 +22,21 @@ namespace tuc.fs.domain
       this._fileDs = Guard.Argument(fileDs, nameof(fileDs)).NotNull();
     }
 
-    public async Task<StringServiceResult> PostFileAsync(string providerId,
-      string container, string name, string contentType, byte[] bytes)
+    public async Task<StringServiceResult> PostFileAsync(PostFileCommand command)
     {
-      FileProvider provider = _fileDs.GetProvider(providerId);
+      var fileData = new FileProviderModel(command.Container, command.Name,
+        command.ContentType, command.Bytes);
 
-      FileRoot item = new FileRoot(providerId, container, name,
-        contentType, bytes);
+      FileProvider provider = _fileDs.GetProvider(command.ProviderId);
+      string path = await provider.PostAsync(fileData);
 
-      var fileData = new FileProviderData(container, name, contentType, bytes);
-      var path = await provider.PostAsync(fileData);
-
+      FileRoot item = new FileRoot(command.ProviderId, command.Container,
+        command.Name, command.ContentType, command.Bytes);
       item.SetProviderPath(path);
 
-      // TODO: esto podría ser parte del handler del evento
-      // pero cómo haría para obtener el identificador del archivo
-      var id = await this._fileRepository.CreateAsync(item);
+      await this._fileRepository.CreateAsync(item);
 
-      // TODO: commit events
+      await PublishAsync(item);
 
       return new StringServiceResult(item.Id, null);
     }

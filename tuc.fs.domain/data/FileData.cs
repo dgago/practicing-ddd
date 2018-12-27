@@ -1,6 +1,7 @@
 using System;
+using tuc.core.domain.model;
 
-namespace tuc.fs.domain
+namespace tuc.fs.domain.data
 {
   public class FileData : Entity<String>
   {

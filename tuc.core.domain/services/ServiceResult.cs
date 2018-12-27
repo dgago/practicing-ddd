@@ -1,4 +1,4 @@
-namespace tuc.fs.domain
+namespace tuc.fs.domain.services
 {
   public class ServiceResult<K>
   {

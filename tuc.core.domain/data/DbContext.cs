@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public abstract class DbContext<TClient, TPool, TDb>
+namespace tuc.core.domain.data
 {
-  public string ConnectionString { get; private set; }
+  public abstract class DbContext
+  {
+    public string ConnectionString { get; private set; }
 
-  public abstract Task<TClient> GetClient();
+    public abstract Task<TClient> GetClient<TClient>();
 
-  public abstract Task<TPool> GetPool();
+    public abstract Task<TPool> GetPool<TPool>();
 
-  public abstract Task<TDb> GetDb();
+    public abstract Task<TDb> GetDb<TDb>();
 
-  public abstract Task Release(TClient client);
+    public abstract Task Release<TClient>(TClient client);
 
-  public abstract Task Close(bool force = false);
+    public abstract Task Close(bool force = false);
+  }
 }

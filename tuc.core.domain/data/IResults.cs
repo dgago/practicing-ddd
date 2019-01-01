@@ -1,15 +1,45 @@
+using System;
 using System.Collections.Generic;
 
 namespace tuc.core.domain.data
 {
-  public interface IResults<T>
+  public class Results<T>
   {
-    long Count { get; set; }
+    #region Public Constructors
 
-    uint PageIndex { get; set; }
+    public Results(long count, IEnumerable<T> items, uint pageIndex, uint pageSize)
+    {
+      Count = count;
+      Items = items;
+      PageIndex = pageIndex;
+      PageSize = pageSize;
+      PageCount = CalculatePageCount(count, pageSize);
+    }
 
-    uint PageSize { get; set; }
+    #endregion Public Constructors
 
-    IEnumerable<T> Items { get; set; }
+    #region Public Properties
+
+    public long Count { get; set; }
+
+    public IEnumerable<T> Items { get; set; }
+
+    public uint PageCount { get; set; }
+
+    public uint PageIndex { get; set; }
+
+    public uint PageSize { get; set; }
+
+    #endregion Public Properties
+
+    #region Protected Methods
+
+    protected uint CalculatePageCount(long count, uint pageSize)
+    {
+      return (uint)Math.Ceiling((double)count / pageSize);
+    }
+
+    #endregion Protected Methods
+
   }
 }

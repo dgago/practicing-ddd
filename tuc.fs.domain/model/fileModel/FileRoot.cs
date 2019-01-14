@@ -8,20 +8,13 @@ namespace tuc.fs.domain.model.fileModel
 {
   public class FileRoot : AggregateRoot<string>
   {
-    public string ProviderId { get; }
-    public string Container { get; }
-    public string Name { get; }
-    public string ContentType { get; }
-    public byte[] Bytes { get; }
-    public int Size { get; }
-    public int NumberOfPages { get; private set; }
-    public DateTime? UploadDate { get; private set; }
-    public string Path { get; private set; }
 
-    public FileRoot(string providerId, string container, string name,
-      string contentType, byte[] bytes, DateTime? uploadDate = null,
-      string id = null, uint version = 0)
-        : base(id, version)
+    #region Public Constructors
+
+    public FileRoot(string providerId, string container, string owner,
+      string name, string contentType, byte[] bytes,
+      DateTime? uploadDate = null, string id = null, uint version = 0)
+        : base(id, owner, null, version)
     {
       if (id == null)
       {
@@ -41,9 +34,34 @@ namespace tuc.fs.domain.model.fileModel
       if (IsNew)
       {
         AddEvent(new FileCreatedEvent(this.Id, this.ProviderId, this.Container,
-          this.Name, this.ContentType, this.Size, this.NumberOfPages, DateTime.Now));
+          this.Name, this.ContentType, this.Size, this.NumberOfPages,
+          uploadDate ?? DateTime.Now));
       }
     }
+
+    #endregion Public Constructors
+
+    #region Public Properties
+
+    public byte[] Bytes { get; }
+
+    public string Container { get; }
+
+    public string ContentType { get; }
+
+    public string Name { get; }
+
+    public int NumberOfPages { get; private set; }
+
+    public string Path { get; private set; }
+
+    public string ProviderId { get; }
+    public int Size { get; }
+    public DateTime? UploadDate { get; private set; }
+
+    #endregion Public Properties
+
+    #region Internal Methods
 
     internal void SetProviderPath(string path)
     {
@@ -55,6 +73,10 @@ namespace tuc.fs.domain.model.fileModel
 
       AddEvent(new FileUploadedEvent(this.Id, this.Path, this.UploadDate.Value));
     }
+
+    #endregion Internal Methods
+
+    #region Private Methods
 
     /// <summary>
     /// Calcula el número de páginas del archivo
@@ -87,5 +109,8 @@ namespace tuc.fs.domain.model.fileModel
         }
       }
     }
+
+    #endregion Private Methods
+
   }
 }

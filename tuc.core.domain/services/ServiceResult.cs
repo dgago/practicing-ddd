@@ -11,12 +11,4 @@ namespace tuc.fs.domain.services
       this.Message = message;
     }
   }
-
-  public class StringServiceResult : ServiceResult<string>
-  {
-    public StringServiceResult(string id, string message)
-      : base(id, message)
-    {
-    }
-  }
 }

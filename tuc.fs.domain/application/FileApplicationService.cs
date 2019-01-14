@@ -12,8 +12,15 @@ namespace tuc.fs.domain.application
 {
   public class FileApplicationService : ApplicationService
   {
-    readonly FileRepository _fileRepository;
+    #region Private Fields
+
     readonly FileProviderDomainService _fileDs;
+
+    readonly FileRepository _fileRepository;
+
+    #endregion Private Fields
+
+    #region Public Constructors
 
     public FileApplicationService(FileRepository fileRepository,
       FileProviderDomainService fileDs)
@@ -21,6 +28,10 @@ namespace tuc.fs.domain.application
       this._fileRepository = Guard.Argument(fileRepository, nameof(fileRepository)).NotNull();
       this._fileDs = Guard.Argument(fileDs, nameof(fileDs)).NotNull();
     }
+
+    #endregion Public Constructors
+
+    #region Public Methods
 
     public async Task<StringServiceResult> PostFileAsync(PostFileCommand command)
     {
@@ -31,14 +42,16 @@ namespace tuc.fs.domain.application
       string path = await provider.PostAsync(fileData);
 
       FileRoot item = new FileRoot(command.ProviderId, command.Container,
-        command.Name, command.ContentType, command.Bytes);
+        command.Username, command.Name, command.ContentType, command.Bytes);
       item.SetProviderPath(path);
 
-      await this._fileRepository.CreateAsync(item);
+      await _fileRepository.CreateAsync(item);
 
-      await PublishAsync(item);
+      PublishAsync(item);
 
       return new StringServiceResult(item.Id, null);
     }
+
+    #endregion Public Methods
   }
 }

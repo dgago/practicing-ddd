@@ -1,20 +1,16 @@
 using tuc.core.domain.application;
-using tuc.core.domain.model;
 
 namespace tuc.fs.domain.application.commands
 {
   public class PostFileCommand : Command
   {
-    public string ProviderId { get; set; }
-    public string Container { get; set; }
-    public string Name { get; set; }
-    public string ContentType { get; set; }
-    public byte[] Bytes { get; set; }
+    #region Public Constructors
 
-    PostFileCommand() { }
+    public PostFileCommand() { }
 
-    PostFileCommand(string providerId, string container,
-      string name, string contentType, byte[] bytes)
+    public PostFileCommand(string client, string username, string providerId,
+      string container, string name, string contentType, byte[] bytes)
+      : base(client, username)
     {
       ProviderId = providerId;
       Container = container;
@@ -22,5 +18,21 @@ namespace tuc.fs.domain.application.commands
       ContentType = contentType;
       Bytes = bytes;
     }
+
+    #endregion Public Constructors
+
+    #region Public Properties
+
+    public byte[] Bytes { get; set; }
+
+    public string Container { get; set; }
+
+    public string ContentType { get; set; }
+
+    public string Name { get; set; }
+
+    public string ProviderId { get; set; }
+
+    #endregion Public Properties
   }
 }

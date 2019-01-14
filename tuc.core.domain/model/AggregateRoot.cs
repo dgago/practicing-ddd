@@ -5,24 +5,58 @@ namespace tuc.core.domain.model
   public abstract class AggregateRoot<K> : Entity<K>
     where K : class
   {
+
+    #region Private Fields
+
     private readonly List<DomainEvent> _domainEvents = new List<DomainEvent>();
+
+    private readonly List<string> _sharedList = new List<string>();
+
+    #endregion Private Fields
+
+    #region Public Constructors
+
+    public AggregateRoot(K id, string owner, List<string> sharedList = null, uint version = 0) : base(id, version)
+    {
+      this.Owner = owner;
+      this._sharedList = sharedList ?? new List<string>();
+    }
+
+    #endregion Public Constructors
+
+    #region Public Properties
+
+    public virtual IReadOnlyList<DomainEvent> DomainEvents => _domainEvents;
+
+    public string Owner { get; }
+
+    public virtual IReadOnlyList<string> SharedList => _sharedList;
+
+    #endregion Public Properties
+
+    #region Protected Properties
 
     protected bool IsNew => this.Version <= 0;
 
-    public AggregateRoot(K id, uint version = 0) : base(id, version)
+    #endregion Protected Properties
+
+    #region Public Methods
+
+    public virtual void ClearEvents()
     {
+      _domainEvents.Clear();
     }
 
-    public virtual IReadOnlyList<DomainEvent> DomainEvents => _domainEvents;
+    #endregion Public Methods
+
+    #region Protected Methods
 
     protected virtual void AddEvent(DomainEvent newEvent)
     {
       _domainEvents.Add(newEvent);
     }
 
-    public virtual void ClearEvents()
-    {
-      _domainEvents.Clear();
-    }
+    #endregion Protected Methods
+
   }
 }

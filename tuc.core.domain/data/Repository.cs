@@ -4,7 +4,7 @@ using tuc.core.domain.model;
 
 namespace tuc.core.domain.data
 {
-  public abstract class Repository<T, D, K>
+  public abstract class Repository<T, D, K> : IRepository<T, D, K>
     where T : AggregateRoot<K>
     where D : Entity<K>
     where K : class
@@ -105,6 +105,28 @@ namespace tuc.core.domain.data
       }
 
       return ditem;
+    }
+
+    public void Remove(K id)
+    {
+      var ditem = this.Store.FindOne(id);
+      if (ditem == null)
+      {
+        throw new ApplicationException($"El registro a eliminar no existe.");
+      }
+
+      this.Store.Remove(id);
+    }
+
+    public async Task RemoveAsync(K id)
+    {
+      var ditem = await this.Store.FindOneAsync(id);
+      if (ditem == null)
+      {
+        throw new ApplicationException($"El registro a eliminar no existe.");
+      }
+
+      this.Store.Remove(id);
     }
   }
 }

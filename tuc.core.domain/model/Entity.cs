@@ -1,6 +1,4 @@
-using System;
 using Dawn;
-using tuc.core.domain.helpers;
 
 namespace tuc.core.domain.model
 {

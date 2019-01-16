@@ -1,34 +1,27 @@
-using System.Security.Principal;
 using tuc.core.domain.application;
 
 namespace sts.domain.app.commands
 {
-  public class CreateSettingCommand : Command
-  {
-
-    #region Public Constructors
-
-    public CreateSettingCommand(
-      IPrincipal principal,
-      string id, 
-      object values)
-      : base(principal)
+    public class CreateSettingCommand : Command
     {
-      Id = id;
-      Values = values;
 
-      ResourceName = "Setting.Create";
+        #region Public Constructors
+
+        public CreateSettingCommand(string id, object values)
+        {
+            Id = id;
+            Values = values;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public string Id { get; set; }
+
+        public object Values { get; set; }
+
+        #endregion Public Properties
+
     }
-
-    #endregion Public Constructors
-
-    #region Public Properties
-
-    public string Id { get; set; }
-
-    public object Values { get; set; }
-
-    #endregion Public Properties
-
-  }
 }

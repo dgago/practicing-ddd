@@ -51,7 +51,7 @@ namespace tuc.core.domain.model
 
     #region Protected Methods
 
-    protected virtual void AddEvent(DomainEvent newEvent)
+    protected void AddEvent(DomainEvent newEvent)
     {
       _domainEvents.Add(newEvent);
     }

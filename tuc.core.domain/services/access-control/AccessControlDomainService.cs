@@ -72,13 +72,13 @@ namespace tuc.core.domain.services.access_control
       }
 
       // rule accepts owner
-      if (AcceptsOwner(rule) && IsOwner(username, item))
+      if (item != null && AcceptsOwner(rule) && IsOwner(username, item))
       {
         return true;
       }
 
       // rule accepts shared list
-      if (AcceptsSharedList(rule) && IsInSharedList(username, item))
+      if (item != null && AcceptsSharedList(rule) && IsInSharedList(username, item))
       {
         return true;
       }
@@ -91,12 +91,14 @@ namespace tuc.core.domain.services.access_control
       return rule.Roles.Any(x => roles.Contains(x));
     }
 
-    private static bool IsInSharedList<K>(string username, AggregateRoot<K> item) where K : class
+    private static bool IsInSharedList<K>(string username, AggregateRoot<K> item) 
+            where K : class
     {
       return item.SharedList.Contains(username);
     }
 
-    private static bool IsOwner<K>(string username, AggregateRoot<K> item) where K : class
+    private static bool IsOwner<K>(string username, AggregateRoot<K> item) 
+            where K : class
     {
       return username == item.Owner;
     }

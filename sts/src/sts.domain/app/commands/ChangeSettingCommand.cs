@@ -1,34 +1,68 @@
-using System.Security.Principal;
+using System;
+using System.Threading.Tasks;
+using sts.domain.data;
+using sts.domain.model.settings;
 using tuc.core.domain.application;
+using tuc.core.domain.services;
 
 namespace sts.domain.app.commands
 {
-  public class ChangeSettingCommand : Command
-  {
-
-    #region Public Constructors
-
-    public ChangeSettingCommand(
-      IPrincipal principal, 
-      string id, 
-      object values)
-      : base(principal)
+    public class ChangeSettingCommand : ItemCommand<string>
     {
-      Id = id;
-      Values = values;
 
-      ResourceName = "Setting.Change";
+        #region Public Constructors
+
+        public ChangeSettingCommand(string id, object values)
+        {
+            Id = id;
+            Values = values;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public string Id { get; set; }
+
+        public object Values { get; set; }
+
+        #endregion Public Properties
+
     }
 
-    #endregion Public Constructors
+    internal class ChangeSettingCommandHandler : SettingCommandHandler<ChangeSettingCommand>
+    {
 
-    #region Public Properties
+        #region Internal Constructors
 
-    public string Id { get; set; }
+        internal ChangeSettingCommandHandler(ISettingRepository settingRepository) 
+            : base(settingRepository)
+        {
+        }
 
-    public object Values { get; set; }
+        #endregion Internal Constructors
 
-    #endregion Public Properties
+        #region Public Methods
 
-  }
+        public override async Task<CommandResult> HandleAsync(ChangeSettingCommand command)
+        {
+            SettingRoot item = await _settingRepository.FindOneAsync(command.Id)
+                .ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ApplicationException("La configuración a actualizar no existe");
+            }
+
+            item.ChangeValues(command.Values);
+
+            await _settingRepository.ReplaceAsync(command.Id, item)
+                .ConfigureAwait(false);
+
+            return new CommandResult(item.Id);
+        }
+
+        #endregion Public Methods
+
+    }
 }

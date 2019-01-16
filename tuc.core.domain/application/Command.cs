@@ -1,41 +1,22 @@
-﻿using System.Security.Principal;
-using tuc.core.domain.model;
-
-namespace tuc.core.domain.application
+﻿namespace tuc.core.domain.application
 {
-  public class Command : ValueObject
-  {
-    #region Private Fields
-
-    private readonly IPrincipal _principal;
-
-    #endregion Private Fields
-
-    #region Public Constructors
-
-    public Command(IPrincipal principal)
+    public abstract class Command
     {
-      _principal = principal;
+
+        #region Public Properties
+
+        public virtual string ResourceName
+        {
+            get
+            {
+                return GetType().AssemblyQualifiedName;
+            }
+        }
+
+        public string Username { get; set; }
+
+        public string[] UserRoles { get; set; }
+
+        #endregion Public Properties
     }
-
-    #endregion Public Constructors
-
-    #region Public Properties
-
-    public string Username
-    {
-      get
-      {
-        return _principal.Identity.Name;
-      }
-    }
-
-    #endregion Public Properties
-
-    #region Protected Internal Properties
-
-    protected internal string ResourceName { get; protected set; }
-
-    #endregion Protected Internal Properties
-  }
 }

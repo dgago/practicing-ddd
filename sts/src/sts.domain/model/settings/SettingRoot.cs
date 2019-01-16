@@ -4,7 +4,7 @@ using tuc.core.domain.model;
 
 namespace sts.domain.model.settings
 {
-  internal class SettingRoot : AggregateRoot<string>
+  internal sealed class SettingRoot : AggregateRoot<string>
   {
     #region Internal Constructors
 
@@ -31,9 +31,9 @@ namespace sts.domain.model.settings
 
     internal void ChangeValues(object values)
     {
-      this.Values = values;
+      Values = values;
 
-      AddEvent(new SettingChangedEvent(this.Id, values, DateTime.Now));
+      AddEvent(new SettingChangedEvent(Id, values, DateTime.Now));
     }
 
     #endregion Internal Methods

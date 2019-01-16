@@ -16,7 +16,7 @@ namespace tuc.core.domain.application
     {
       if (command.ResourceName.IsNows())
       {
-        return;
+        throw new ArgumentException("No se especifica el recurso a validar.");
       }
 
       string[] roles = null;

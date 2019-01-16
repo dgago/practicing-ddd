@@ -4,7 +4,7 @@ using sts.domain.app.commands;
 using sts.domain.data;
 using sts.domain.model.settings;
 using tuc.core.domain.application;
-using tuc.fs.domain.services;
+using tuc.core.domain.services;
 
 namespace sts.domain.app
 {
@@ -14,7 +14,7 @@ namespace sts.domain.app
 
     // TODO: Constructor
 
-    public async Task<StringServiceResult> CreateSetting(CreateSettingCommand command)
+    public async Task<CommandResult> CreateSetting(CreateSettingCommand command)
     {
       SettingRoot item = new SettingRoot(
         command.Id, 
@@ -27,10 +27,10 @@ namespace sts.domain.app
 
       PublishAsync(item);
 
-      return new StringServiceResult(item.Id, null);
+      return new CommandResult(item.Id, null);
     }
 
-    public async Task<StringServiceResult> ChangeSetting(ChangeSettingCommand command)
+    public async Task<CommandResult> ChangeSetting(ChangeSettingCommand command)
     {
       SettingRoot item = await _settingRepository.FindOneAsync(command.Id);
 
@@ -46,10 +46,10 @@ namespace sts.domain.app
       // TODO: nunca se produjo el evento
       PublishAsync(item);
 
-      return new StringServiceResult(item.Id, null);
+      return new CommandResult(item.Id, null);
     }
 
-    public async Task<StringServiceResult> RemoveSetting(RemoveSettingCommand command)
+    public async Task<CommandResult> RemoveSetting(RemoveSettingCommand command)
     {
       // TODO: validaciones del command?
       SettingRoot item = new SettingRoot(command.Id, command.Username, null);
@@ -65,7 +65,7 @@ namespace sts.domain.app
 
       PublishAsync(item);
 
-      return new StringServiceResult(item.Id, null);
+      return new CommandResult(item.Id, null);
     }
   }
 }

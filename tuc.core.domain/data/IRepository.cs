@@ -3,33 +3,30 @@ using tuc.core.domain.model;
 
 namespace tuc.core.domain.data
 {
-  public interface IRepository<T, D, K>
-    where T : AggregateRoot<K>
-    where D : Entity<K>
-    where K : class
+  public interface IRepository
   {
 
     #region Public Methods
 
-    K Create(T item);
+    //string Create(IAggregateRoot item);
 
-    Task<K> CreateAsync(T item);
+    Task<string> CreateAsync(IAggregateRoot item);
 
-    T FindOne(K id);
+    IAggregateRoot FindOne(string id);
 
-    Task<T> FindOneAsync(K id);
+    Task<IAggregateRoot> FindOneAsync(string id);
 
-    D FindOneData(K id);
+    //IEntity FindOneData(string id);
 
-    Task<D> FindOneDataAsync(K id);
+    //Task<IEntity> FindOneDataAsync(string id);
 
-    void Remove(K id);
+    //void Remove(string id);
 
-    Task RemoveAsync(K id);
+    //Task RemoveAsync(string id);
 
-    bool Replace(K id, T item);
+    //bool Replace(string id, IAggregateRoot item);
 
-    Task<bool> ReplaceAsync(K id, T item);
+    Task<bool> ReplaceAsync(string id, IAggregateRoot item);
 
     #endregion Public Methods
 

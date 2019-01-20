@@ -8,64 +8,64 @@ using tuc.core.domain.services;
 
 namespace sts.domain.app
 {
-  public class SettingAppService : ApplicationService
-  {
-    private readonly ISettingRepository _settingRepository;
+  //public class SettingAppService : ApplicationService
+  //{
+  //  private readonly ISettingRepository _settingRepository;
 
-    // TODO: Constructor
+  //  // TODO: Constructor
 
-    public async Task<CommandResult> CreateSetting(CreateSettingCommand command)
-    {
-      SettingRoot item = new SettingRoot(
-        command.Id, 
-        command.Username, 
-        command.Values);
+  //  public async Task<CommandResult> CreateSetting(CreateSettingCommand command)
+  //  {
+  //    SettingRoot item = new SettingRoot(
+  //      command.Id, 
+  //      command.Username, 
+  //      command.Values);
 
-      Acl(command, item);
+  //    Acl(command, item);
 
-      await _settingRepository.CreateAsync(item).ConfigureAwait(false);
+  //    await _settingRepository.CreateAsync(item).ConfigureAwait(false);
 
-      PublishAsync(item);
+  //    PublishAsync(item);
 
-      return new CommandResult(item.Id, null);
-    }
+  //    return new CommandResult(item.Id, null);
+  //  }
 
-    public async Task<CommandResult> ChangeSetting(ChangeSettingCommand command)
-    {
-      SettingRoot item = await _settingRepository.FindOneAsync(command.Id);
+  //  public async Task<CommandResult> ChangeSetting(ChangeSettingCommand command)
+  //  {
+  //    SettingRoot item = await _settingRepository.FindOneAsync(command.Id);
 
-      Acl(command, item);
+  //    Acl(command, item);
 
-      if (item == null)
-      {
-        throw new ApplicationException("La configuración a actualizar no existe");
-      }
+  //    if (item == null)
+  //    {
+  //      throw new ApplicationException("La configuración a actualizar no existe");
+  //    }
 
-      await _settingRepository.RemoveAsync(command.Id).ConfigureAwait(false);
+  //    await _settingRepository.RemoveAsync(command.Id).ConfigureAwait(false);
 
-      // TODO: nunca se produjo el evento
-      PublishAsync(item);
+  //    // TODO: nunca se produjo el evento
+  //    PublishAsync(item);
 
-      return new CommandResult(item.Id, null);
-    }
+  //    return new CommandResult(item.Id, null);
+  //  }
 
-    public async Task<CommandResult> RemoveSetting(RemoveSettingCommand command)
-    {
-      // TODO: validaciones del command?
-      SettingRoot item = new SettingRoot(command.Id, command.Username, null);
+  //  public async Task<CommandResult> RemoveSetting(RemoveSettingCommand command)
+  //  {
+  //    // TODO: validaciones del command?
+  //    SettingRoot item = new SettingRoot(command.Id, command.Username, null);
 
-      Acl(command, item);
+  //    Acl(command, item);
 
-      if (item == null)
-      {
-        throw new ApplicationException("La configuración a eliminiar no existe");
-      }
+  //    if (item == null)
+  //    {
+  //      throw new ApplicationException("La configuración a eliminiar no existe");
+  //    }
 
-      await _settingRepository.CreateAsync(item).ConfigureAwait(false);
+  //    await _settingRepository.CreateAsync(item).ConfigureAwait(false);
 
-      PublishAsync(item);
+  //    PublishAsync(item);
 
-      return new CommandResult(item.Id, null);
-    }
-  }
+  //    return new CommandResult(item.Id, null);
+  //  }
+  //}
 }

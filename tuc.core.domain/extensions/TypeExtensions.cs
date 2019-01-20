@@ -76,7 +76,7 @@ namespace tuc.core.domain.extensions
 
     // internal static IReadOnlyDictionary<Type, Action<T, IAggregateEvent>> GetAggregateEventApplyMethods<TAggregate, TIdentity, T>(this Type type)
     //     where TAggregate : IAggregateRoot<TIdentity>
-    //     where TIdentity : IIdentity
+    //     where TIdentity : string
     // {
     //   var aggregateEventType = typeof(IAggregateEvent<TAggregate, TIdentity>);
 

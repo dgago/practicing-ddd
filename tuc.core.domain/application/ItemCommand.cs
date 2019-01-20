@@ -2,15 +2,25 @@
 
 namespace tuc.core.domain.application
 {
-    public abstract class ItemCommand<K> : Command
-        where K : class
+  public abstract class ItemCommand : Command
+  {
+
+    #region Public Constructors
+
+    public ItemCommand(string id)
     {
-
-        #region Public Properties
-
-        public AggregateRoot<K> Item { get; set; }
-
-        #endregion Public Properties
-
+      Id = id;
     }
+
+    #endregion Public Constructors
+
+    #region Public Properties
+
+    public string Id { get; set; }
+
+    public IAggregateRoot Item { get; internal set; }
+
+    #endregion Public Properties
+
+  }
 }

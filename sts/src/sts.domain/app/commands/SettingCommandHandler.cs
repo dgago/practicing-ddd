@@ -7,31 +7,31 @@ using tuc.core.domain.services;
 namespace sts.domain.app.commands
 {
 
-    internal abstract class SettingCommandHandler<TCommand> : ICommandHandler<TCommand>
-        where TCommand : Command
+  public abstract class SettingCommandHandler<TCommand> : ICommandHandler<TCommand>
+    where TCommand : Command
+  {
+
+    #region Protected Fields
+
+    protected readonly ISettingRepository _repository;
+
+    #endregion Protected Fields
+
+    #region Protected Constructors
+
+    protected SettingCommandHandler(ISettingRepository settingRepository)
     {
-
-        #region Protected Fields
-
-        protected readonly ISettingRepository _settingRepository;
-
-        #endregion Protected Fields
-
-        #region Protected Constructors
-
-        protected SettingCommandHandler(ISettingRepository settingRepository)
-        {
-            _settingRepository = settingRepository
-                ?? throw new ArgumentNullException(nameof(settingRepository));
-        }
-
-        #endregion Protected Constructors
-
-        #region Public Methods
-
-        public abstract Task<CommandResult> HandleAsync(TCommand command);
-
-        #endregion Public Methods
-
+      _repository = settingRepository
+        ?? throw new ArgumentNullException(nameof(settingRepository));
     }
+
+    #endregion Protected Constructors
+
+    #region Public Methods
+
+    public abstract Task<CommandResult> HandleAsync(TCommand command);
+
+    #endregion Public Methods
+
+  }
 }

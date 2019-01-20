@@ -2,8 +2,7 @@ using System.Collections.Generic;
 
 namespace tuc.core.domain.model
 {
-  public abstract class AggregateRoot<K> : Entity<K>
-    where K : class
+  public abstract class AggregateRoot : Entity, IAggregateRoot
   {
 
     #region Private Fields
@@ -16,7 +15,12 @@ namespace tuc.core.domain.model
 
     #region Public Constructors
 
-    public AggregateRoot(K id, string owner, List<string> sharedList = null, uint version = 0) : base(id, version)
+    public AggregateRoot(
+      string id,
+      string owner,
+      List<string> sharedList = null,
+      uint version = 0)
+      : base(id, version)
     {
       this.Owner = owner;
       this._sharedList = sharedList ?? new List<string>();

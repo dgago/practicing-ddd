@@ -2,13 +2,16 @@ using tuc.core.domain.model;
 
 namespace tuc.core.domain.data
 {
-  public abstract class Mapper<T, D, K>
-    where T : Entity<K>
-    where D : Entity<K>
-    where K : class
+  public abstract class Mapper<TRoot, TData>
+    where TRoot : IAggregateRoot
+    where TData : IEntity
   {
-    public abstract D MapToData(T item);
+    #region Public Methods
 
-    public abstract T MapToDomain(D item);
+    public abstract TData MapToData(TRoot item);
+
+    public abstract TRoot MapToDomain(TData item);
+
+    #endregion Public Methods
   }
 }

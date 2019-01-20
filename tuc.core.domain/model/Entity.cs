@@ -2,27 +2,53 @@ using Dawn;
 
 namespace tuc.core.domain.model
 {
-  public abstract class Entity<K>
-    where K : class
+  public abstract class Entity : IEntity
   {
-    public virtual K Id { get; protected set; }
 
-    public uint Version { get; protected set; }
+    #region Public Constructors
 
-    public Entity(K id, uint version = 0)
+    public Entity(string id, uint version = 0)
     {
       if (id == null)
       {
         Guard.Argument(version, nameof(version)).Zero();
       }
 
-      this.Id = id;
-      this.Version = version;
+      Id = id;
+      Version = version;
+    }
+
+    #endregion Public Constructors
+
+    #region Public Properties
+
+    public virtual string Id { get; protected set; }
+
+    public uint Version { get; protected set; }
+
+    #endregion Public Properties
+
+    #region Public Methods
+
+    public static bool operator !=(Entity a, Entity b)
+    {
+      return !(a == b);
+    }
+
+    public static bool operator ==(Entity a, Entity b)
+    {
+      if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+        return true;
+
+      if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+        return false;
+
+      return a.Equals(b);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as Entity<K>;
+      var other = obj as Entity;
 
       if (ReferenceEquals(other, null))
         return false;
@@ -39,26 +65,12 @@ namespace tuc.core.domain.model
       return Id == other.Id;
     }
 
-    public static bool operator ==(Entity<K> a, Entity<K> b)
-    {
-      if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
-        return true;
-
-      if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
-        return false;
-
-      return a.Equals(b);
-    }
-
-    public static bool operator !=(Entity<K> a, Entity<K> b)
-    {
-      return !(a == b);
-    }
-
     public override int GetHashCode()
     {
       return (GetType().Name + Id).GetHashCode();
     }
+
+    #endregion Public Methods
 
     // private Type GetRealType()
     // {

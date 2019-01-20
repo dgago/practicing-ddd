@@ -10,17 +10,16 @@ namespace tuc.core.domain.services.access_control
   public class AccessControlDomainService : DomainService
   {
 
-    #region Private Fields
+    #region Public Fields
 
     // TODO: restrict access to this rules
     public static Dictionary<string, AccessControlRule> _rules;
 
-    #endregion Private Fields
+    #endregion Public Fields
 
     #region Public Methods
 
-    public static bool HasAccess<K>(string resource, string username, string[] roles, AggregateRoot<K> item)
-      where K : class
+    public static bool HasAccess(string resource, string username, string[] roles, IAggregateRoot item)
     {
       AccessControlRule rule = _rules[resource];
 
@@ -46,12 +45,11 @@ namespace tuc.core.domain.services.access_control
       return (rule.Type & AccessControlType.SharedList) != 0;
     }
 
-    private static bool HasAccess<K>(
+    private static bool HasAccess(
       AccessControlRule rule, 
       string username, 
       string[] roles, 
-      AggregateRoot<K> item)
-      where K : class
+      IAggregateRoot item)
     {
       // rule is null
       if (rule == null)
@@ -91,14 +89,12 @@ namespace tuc.core.domain.services.access_control
       return rule.Roles.Any(x => roles.Contains(x));
     }
 
-    private static bool IsInSharedList<K>(string username, AggregateRoot<K> item) 
-            where K : class
+    private static bool IsInSharedList(string username, IAggregateRoot item) 
     {
       return item.SharedList.Contains(username);
     }
 
-    private static bool IsOwner<K>(string username, AggregateRoot<K> item) 
-            where K : class
+    private static bool IsOwner(string username, IAggregateRoot item) 
     {
       return username == item.Owner;
     }

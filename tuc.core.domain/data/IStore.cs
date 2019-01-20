@@ -7,8 +7,7 @@ using tuc.core.domain.model;
 namespace tuc.core.domain.data
 {
   public interface IStore<T, K>
-    where T : Entity<K>
-    where K : class
+    where T : IEntity
   {
 
     #region Public Methods

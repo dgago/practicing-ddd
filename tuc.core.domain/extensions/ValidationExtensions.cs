@@ -5,7 +5,17 @@ namespace tuc.core.domain.extensions
 {
   public static class ValidationExtensions
   {
+
     #region Public Methods
+
+    public static void Exists(this object arg, string name, string id = null)
+    {
+      if (arg == null)
+      {
+        string idm = id.IsNows() ? "" : $" con identificador {id}";
+        throw new ArgumentException($"El item {name}{idm} no existe.");
+      }
+    }
 
     public static void NotEmpty(this IList arg, string name)
     {
@@ -27,7 +37,6 @@ namespace tuc.core.domain.extensions
         throw new ArgumentException($"El valor de {name} debe ser especificado.");
       }
     }
-
     public static void NotNull(this string arg, string name)
     {
       if (string.IsNullOrWhiteSpace(arg))
@@ -37,5 +46,6 @@ namespace tuc.core.domain.extensions
     }
 
     #endregion Public Methods
+
   }
 }

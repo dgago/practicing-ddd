@@ -4,80 +4,110 @@ using tuc.core.domain.model;
 
 namespace tuc.core.domain.data
 {
-  public abstract class Repository<T, D, K> : IRepository<T, D, K>
-    where T : AggregateRoot<K>
-    where D : Entity<K>
-    where K : class
+  public abstract class Repository<TRoot> : IRepository
   {
-    protected IStore<D, K> Store { get; private set; }
 
-    protected Mapper<T, D, K> Mapper { get; private set; }
+    #region Protected Properties
 
-    public virtual async Task<T> FindOneAsync(K id)
+    protected Mapper<IAggregateRoot, IEntity> Mapper { get;  }
+
+    protected IStore<IEntity, string> Store { get; }
+
+    #endregion Protected Properties
+
+    #region Public Methods
+
+    public virtual string Create(IAggregateRoot item)
     {
-      var item = await this.Store.FindOneAsync(id);
+      IEntity ritem = Mapper.MapToData(item);
+      return Store.Create(ritem);
+    }
+
+    public virtual Task<string> CreateAsync(IAggregateRoot item)
+    {
+      IEntity ritem = Mapper.MapToData(item);
+      return Store.CreateAsync(ritem);
+    }
+
+    public virtual IAggregateRoot FindOne(string id)
+    {
+      IEntity item = Store.FindOne(id);
       if (item == null)
       {
         return null;
       }
 
-      return this.Mapper.MapToDomain(item);
+      return Mapper.MapToDomain(item);
     }
 
-    public virtual T FindOne(K id)
+    public virtual async Task<IAggregateRoot> FindOneAsync(string id)
     {
-      var item = this.Store.FindOne(id);
+      IEntity item = await Store.FindOneAsync(id).ConfigureAwait(false);
       if (item == null)
       {
         return null;
       }
 
-      return this.Mapper.MapToDomain(item);
+      return Mapper.MapToDomain(item);
     }
 
-    public virtual Task<D> FindOneDataAsync(K id)
+    public virtual IEntity FindOneData(string id)
     {
-      return this.Store.FindOneAsync(id);
+      return Store.FindOne(id);
     }
 
-    public virtual D FindOneData(K id)
+    public virtual Task<IEntity> FindOneDataAsync(string id)
     {
-      return this.Store.FindOne(id);
+      return Store.FindOneAsync(id);
     }
 
-    public virtual Task<K> CreateAsync(T item)
+    public void Remove(string id)
     {
-      var ritem = this.Mapper.MapToData(item);
-      return this.Store.CreateAsync(ritem);
+      IEntity ditem = Store.FindOne(id);
+      if (ditem == null)
+      {
+        throw new ApplicationException($"El registro a eliminar no existe.");
+      }
+
+      Store.Remove(id);
     }
 
-    public virtual K Create(T item)
+    public async Task RemoveAsync(string id)
     {
-      var ritem = this.Mapper.MapToData(item);
-      return this.Store.Create(ritem);
+      IEntity ditem = await Store.FindOneAsync(id).ConfigureAwait(false);
+      if (ditem == null)
+      {
+        throw new ApplicationException($"El registro a eliminar no existe.");
+      }
+
+      Store.Remove(id);
     }
 
-    public virtual async Task<bool> ReplaceAsync(K id, T item)
+    public virtual bool Replace(string id, IAggregateRoot item)
     {
-      D ditem = await GetItemAsync(id);
+      IEntity ditem = GetItem(id);
 
       ValidateItemVersion(item, ditem);
 
-      var ritem = this.Mapper.MapToData(item);
-      return await this.Store.ReplaceAsync(id, ritem);
+      IEntity ritem = Mapper.MapToData(item);
+      return Store.Replace(id, ritem);
     }
 
-    public virtual bool Replace(K id, T item)
+    public virtual async Task<bool> ReplaceAsync(string id, IAggregateRoot item)
     {
-      D ditem = GetItem(id);
+      IEntity ditem = await GetItemAsync(id);
 
       ValidateItemVersion(item, ditem);
 
-      var ritem = this.Mapper.MapToData(item);
-      return this.Store.Replace(id, ritem);
+      IEntity ritem = Mapper.MapToData(item);
+      return await Store.ReplaceAsync(id, ritem).ConfigureAwait(false);
     }
 
-    private static void ValidateItemVersion(T item, D ditem)
+    #endregion Public Methods
+
+    #region Private Methods
+
+    private static void ValidateItemVersion(IAggregateRoot item, IEntity ditem)
     {
       if (ditem.Version > item.Version)
       {
@@ -85,9 +115,9 @@ namespace tuc.core.domain.data
       }
     }
 
-    private async Task<D> GetItemAsync(K id)
+    private IEntity GetItem(string id)
     {
-      var ditem = await this.Store.FindOneAsync(id);
+      IEntity ditem = Store.FindOne(id);
       if (ditem == null)
       {
         throw new ApplicationException($"El registro a actualizar no existe.");
@@ -96,9 +126,9 @@ namespace tuc.core.domain.data
       return ditem;
     }
 
-    private D GetItem(K id)
+    private async Task<IEntity> GetItemAsync(string id)
     {
-      var ditem = this.Store.FindOne(id);
+      IEntity ditem = await Store.FindOneAsync(id).ConfigureAwait(false);
       if (ditem == null)
       {
         throw new ApplicationException($"El registro a actualizar no existe.");
@@ -107,26 +137,7 @@ namespace tuc.core.domain.data
       return ditem;
     }
 
-    public void Remove(K id)
-    {
-      var ditem = this.Store.FindOne(id);
-      if (ditem == null)
-      {
-        throw new ApplicationException($"El registro a eliminar no existe.");
-      }
+    #endregion Private Methods
 
-      this.Store.Remove(id);
-    }
-
-    public async Task RemoveAsync(K id)
-    {
-      var ditem = await this.Store.FindOneAsync(id);
-      if (ditem == null)
-      {
-        throw new ApplicationException($"El registro a eliminar no existe.");
-      }
-
-      this.Store.Remove(id);
-    }
   }
 }

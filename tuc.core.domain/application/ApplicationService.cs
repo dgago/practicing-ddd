@@ -11,7 +11,7 @@ namespace tuc.core.domain.application
 
     #region Protected Methods
 
-    protected void Acl<K>(Command command, AggregateRoot<K> item)
+    protected void Acl<K>(Command command, IAggregateRoot item)
       where K : class
     {
       if (command.ResourceName.IsNows())
@@ -43,8 +43,7 @@ namespace tuc.core.domain.application
     /// <param name="item"></param>
     /// <typeparam name="K"></typeparam>
     /// <returns></returns>
-    protected Task PublishAsync<K>(AggregateRoot<K> item)
-      where K : class
+    protected Task PublishAsync(IAggregateRoot item)
     {
       return null;
     }
